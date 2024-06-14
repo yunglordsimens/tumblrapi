@@ -4,6 +4,7 @@ const session = require('express-session');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Использование переменных окружения для ключей и секрета Tumblr
 const tumblrConsumerKey = process.env.TUMBLR_CONSUMER_KEY;
 const tumblrConsumerSecret = process.env.TUMBLR_CONSUMER_SECRET;
 const callbackUrl = 'https://saltivkatype-f4fdffdf2e85.herokuapp.com/callback';
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Tumblr OAuth App!');
 });
 
+// Маршрут для инициализации OAuth авторизации
 app.get('/auth', (req, res) => {
   oa.getOAuthRequestToken((error, oauthToken, oauthTokenSecret) => {
     if (error) {
@@ -38,6 +40,7 @@ app.get('/auth', (req, res) => {
   });
 });
 
+// Маршрут обратного вызова после авторизации пользователя
 app.get('/callback', (req, res) => {
   const oauthToken = req.session.oauthToken;
   const oauthTokenSecret = req.session.oauthTokenSecret;
@@ -54,6 +57,7 @@ app.get('/callback', (req, res) => {
   });
 });
 
+// Маршрут для получения постов блога
 app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
