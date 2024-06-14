@@ -62,7 +62,7 @@ app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
 
-  oa.get('https://api.tumblr.com/v2/blog/anime--irl.tumblr.com/posts?api_key=' + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+  oa.get('https://api.tumblr.com/v2/blog/saltivkatype.tumblr.com/posts?api_key=' + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
       res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
     } else {
