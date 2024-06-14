@@ -1,0 +1,16 @@
+{
+  "name": "tumblr-oauth-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "oauth": "^0.9.15",
+    "express-session": "^1.17.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
