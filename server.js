@@ -48,6 +48,7 @@ app.get('/callback', (req, res) => {
 
   oa.getOAuthAccessToken(oauthToken, oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret) => {
     if (error) {
+      console.error('Error getting OAuth access token:', error);
       res.send('Error getting OAuth access token: ' + JSON.stringify(error));
     } else {
       req.session.oauthAccessToken = oauthAccessToken;
@@ -62,9 +63,10 @@ app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
 
-  const blogName = 'saltivkatype.tumblr.com';
-  oa.get('https://api.tumblr.com/v2/blog/saltivkatype.tumblr.com/posts?api_key=' + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+  const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
+  oa.get(`https://api.tumblr.com/v2/blog/saltivkatype.tumblr.com/posts?api_key=` + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
+      console.error('Error getting Tumblr posts:', error);
       res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
     } else {
       const posts = JSON.parse(data).response.posts;
