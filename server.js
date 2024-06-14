@@ -3,10 +3,6 @@ const OAuth = require('oauth').OAuth;
 const app = express();
 const port = 3000;
 
-const tumblrConsumerKey = '4t7uUNbPNa5nZnZxaICHOe9O1WXfeL4J2lN0UosLNv0PLhEsXZ';
-const tumblrConsumerSecret = 'show';
-const callbackUrl = 'http://localhost:3000/callback';
-
 const express = require('express');
 const OAuth = require('oauth').OAuth;
 const session = require('express-session');
