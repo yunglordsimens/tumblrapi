@@ -1,5 +1,5 @@
 {
-  "name": "tumblr-oauth-server",
+  "name": "tumblr-oauth-app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -10,6 +10,9 @@
     "express": "^4.17.1",
     "oauth": "^0.9.15",
     "express-session": "^1.17.1"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "author": "",
   "license": "ISC"
