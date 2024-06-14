@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 
 const tumblrConsumerKey = process.env.TUMBLR_CONSUMER_KEY;
 const tumblrConsumerSecret = process.env.TUMBLR_CONSUMER_SECRET;
-const callbackUrl = 'https://saltivkatype-f4fdffdf2e85.herokuapp.com/callback';
+const callbackUrl = 'https://saltivkatype.herokuapp.com/callback';
 
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 
