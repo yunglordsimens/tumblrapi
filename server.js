@@ -28,7 +28,8 @@ app.get('/', (req, res) => {
 app.get('/auth', (req, res) => {
   oa.getOAuthRequestToken((error, oauthToken, oauthTokenSecret) => {
     if (error) {
-      res.send('Error getting OAuth request token: ' + error);
+      console.error('Error getting OAuth request token:', error);
+      res.send('Error getting OAuth request token: ' + JSON.stringify(error));
     } else {
       req.session.oauthToken = oauthToken;
       req.session.oauthTokenSecret = oauthTokenSecret;
@@ -44,7 +45,7 @@ app.get('/callback', (req, res) => {
 
   oa.getOAuthAccessToken(oauthToken, oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret) => {
     if (error) {
-      res.send('Error getting OAuth access token: ' + error);
+      res.send('Error getting OAuth access token: ' + JSON.stringify(error));
     } else {
       req.session.oauthAccessToken = oauthAccessToken;
       req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
@@ -59,7 +60,7 @@ app.get('/posts', (req, res) => {
 
   oa.get('https://api.tumblr.com/v2/blog/anime--irl.tumblr.com/posts?api_key=' + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
-      res.send('Error getting Tumblr posts: ' + error);
+      res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
     } else {
       const posts = JSON.parse(data).response.posts;
       res.json(posts);
