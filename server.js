@@ -64,7 +64,7 @@ app.get('/posts', (req, res) => {
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
 
   const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
-  oa.get(`https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=` + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+  oa.get(`https://api.tumblr.com/v2/blog/saltivkatype/posts?api_key=` + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
       console.error('Error getting Tumblr posts:', error);
       res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
