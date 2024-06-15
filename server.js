@@ -30,6 +30,7 @@ app.get('/auth', (req, res) => {
       console.error('Error getting OAuth request token:', error);
       res.send('Error getting OAuth request token: ' + JSON.stringify(error));
     } else {
+      console.log('OAuth request token response body:', body);
       const temp1 = body.split("&");
       const oauthToken = temp1[0].split("=")[1];
       const oauthTokenSecret = temp1[1].split("=")[1];
@@ -61,6 +62,7 @@ app.get('/callback', (req, res) => {
       console.error('Error getting OAuth access token:', error);
       res.send('Error getting OAuth access token: ' + JSON.stringify(error));
     } else {
+      console.log('OAuth access token response body:', body);
       const temp1 = body.split("&");
       const oauthAccessToken = temp1[0].split("=")[1];
       const oauthAccessTokenSecret = temp1[1].split("=")[1];
