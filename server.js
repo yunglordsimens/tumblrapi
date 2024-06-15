@@ -48,11 +48,6 @@ app.get('/callback', (req, res) => {
   const oauthTokenSecret = req.session.oauthTokenSecret;
   const oauthVerifier = req.query.oauth_verifier;
 
-  if (!oauthToken || !oauthTokenSecret || !oauthVerifier) {
-    res.send('Error: Missing OAuth token, secret, or verifier.');
-    return;
-  }
-
   const oauth = {
     consumer_key: tumblrConsumerKey,
     consumer_secret: tumblrConsumerSecret,
@@ -83,11 +78,6 @@ app.get('/callback', (req, res) => {
 app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
-
-  if (!oauthAccessToken || !oauthAccessTokenSecret) {
-    res.send('Error: Missing OAuth access token or secret.');
-    return;
-  }
 
   const oauth = {
     consumer_key: tumblrConsumerKey,
