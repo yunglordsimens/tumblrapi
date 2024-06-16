@@ -9,7 +9,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "oauth": "^0.9.15",
-    "express-session": "^1.17.1"
+    "express-session": "^1.17.1",
+    "connect-redis": "^4.0.4",
+    "redis": "^3.1.2"
   },
   "engines": {
     "node": "14.x"
