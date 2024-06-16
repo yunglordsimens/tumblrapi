@@ -37,7 +37,9 @@ app.get('/auth', (req, res) => {
       console.log('OAuth Request Token Secret:', oauthTokenSecret);
       req.session.oauthToken = oauthToken;
       req.session.oauthTokenSecret = oauthTokenSecret;
-      res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token=' + oauthToken);
+      req.session.save(() => {  // Убедитесь, что сессия сохранена
+        res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token=' + oauthToken);
+      });
     }
   });
 });
@@ -49,9 +51,9 @@ app.get('/callback', (req, res) => {
   const oauthVerifier = req.query.oauth_verifier;
 
   // Дополнительная отладка
-  console.log('Session OAuth Token:', req.session.oauthToken);
-  console.log('Session OAuth Token Secret:', req.session.oauthTokenSecret);
-  console.log('Query OAuth Verifier:', req.query.oauth_verifier);
+  console.log('Session OAuth Token:', oauthToken);
+  console.log('Session OAuth Token Secret:', oauthTokenSecret);
+  console.log('Query OAuth Verifier:', oauthVerifier);
 
   if (!oauthToken || !oauthTokenSecret || !oauthVerifier) {
     console.error('Missing OAuth token, secret, or verifier.');
@@ -72,7 +74,9 @@ app.get('/callback', (req, res) => {
       console.log('OAuth Access Token Secret:', oauthAccessTokenSecret);
       req.session.oauthAccessToken = oauthAccessToken;
       req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
-      res.redirect('/posts');
+      req.session.save(() => {  // Убедитесь, что сессия сохранена
+        res.redirect('/posts');
+      });
     }
   });
 });
@@ -88,7 +92,7 @@ app.get('/posts', (req, res) => {
   }
 
   const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
-  const url = `https://api.tumblr.com/v2/blog/saltivkatype/posts?api_key=${tumblrConsumerKey}`;
+  const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${tumblrConsumerKey}`;
 
   oa.get(url, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
