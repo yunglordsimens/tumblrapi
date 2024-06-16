@@ -91,7 +91,7 @@ app.get('/callback', (req, res) => {
   });
 });
 
-// Маршрут для получения постов блога
+// Маршрут для получения постов блога и рендеринга HTML-шаблона
 app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
@@ -110,7 +110,41 @@ app.get('/posts', (req, res) => {
       res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
     } else {
       const posts = JSON.parse(data).response.posts;
-      res.json(posts);
+
+      let html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tumblr Posts</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+          .post { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; }
+          .post img { max-width: 100%; height: auto; }
+          .post h2 { margin: 0 0 10px; }
+          .post p { margin: 0 0 10px; }
+        </style>
+      </head>
+      <body>
+        <h1>Tumblr Posts</h1>`;
+
+      posts.forEach(post => {
+        html += `
+        <div class="post">
+          <h2>${post.summary}</h2>`;
+        if (post.photos && post.photos.length > 0) {
+          html += `<img src="${post.photos[0].original_size.url}" alt="Post image">`;
+        }
+        html += `<p>${post.summary}</p>
+        </div>`;
+      });
+
+      html += `
+      </body>
+      </html>`;
+
+      res.send(html);
     }
   });
 });
