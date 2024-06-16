@@ -9,7 +9,12 @@ const tumblrConsumerKey = process.env.TUMBLR_CONSUMER_KEY;
 const tumblrConsumerSecret = process.env.TUMBLR_CONSUMER_SECRET;
 const callbackUrl = 'https://saltivkatype-f4fdffdf2e85.herokuapp.com/callback';
 
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }  // Убедитесь, что secure установлено на false, если вы тестируете локально
+}));
 
 const oa = new OAuth(
   'https://www.tumblr.com/oauth/request_token',
@@ -40,7 +45,8 @@ app.get('/auth', (req, res) => {
       console.log('OAuth Request Token Secret:', oauthTokenSecret);
       req.session.oauthToken = oauthToken;
       req.session.oauthTokenSecret = oauthTokenSecret;
-      req.session.save(() => {  // Убедитесь, что сессия сохранена
+      req.session.save((err) => {  // Убедитесь, что сессия сохранена
+        if (err) console.error('Session save error:', err);
         res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token=' + oauthToken);
       });
     }
@@ -77,7 +83,8 @@ app.get('/callback', (req, res) => {
       console.log('OAuth Access Token Secret:', oauthAccessTokenSecret);
       req.session.oauthAccessToken = oauthAccessToken;
       req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
-      req.session.save(() => {  // Убедитесь, что сессия сохранена
+      req.session.save((err) => {  // Убедитесь, что сессия сохранена
+        if (err) console.error('Session save error:', err);
         res.redirect('/posts');
       });
     }
