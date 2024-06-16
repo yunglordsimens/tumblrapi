@@ -48,6 +48,11 @@ app.get('/callback', (req, res) => {
   const oauthTokenSecret = req.session.oauthTokenSecret;
   const oauthVerifier = req.query.oauth_verifier;
 
+  // Дополнительная отладка
+  console.log('Session OAuth Token:', req.session.oauthToken);
+  console.log('Session OAuth Token Secret:', req.session.oauthTokenSecret);
+  console.log('Query OAuth Verifier:', req.query.oauth_verifier);
+
   if (!oauthToken || !oauthTokenSecret || !oauthVerifier) {
     console.error('Missing OAuth token, secret, or verifier.');
     res.send('Error: Missing OAuth token, secret, or verifier.');
