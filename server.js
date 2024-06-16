@@ -33,6 +33,8 @@ app.get('/auth', (req, res) => {
       console.error('Error getting OAuth request token:', error);
       res.send('Error getting OAuth request token: ' + JSON.stringify(error));
     } else {
+      console.log('OAuth Request Token:', oauthToken);
+      console.log('OAuth Request Token Secret:', oauthTokenSecret);
       req.session.oauthToken = oauthToken;
       req.session.oauthTokenSecret = oauthTokenSecret;
       res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token=' + oauthToken);
@@ -46,10 +48,23 @@ app.get('/callback', (req, res) => {
   const oauthTokenSecret = req.session.oauthTokenSecret;
   const oauthVerifier = req.query.oauth_verifier;
 
+  if (!oauthToken || !oauthTokenSecret || !oauthVerifier) {
+    console.error('Missing OAuth token, secret, or verifier.');
+    res.send('Error: Missing OAuth token, secret, or verifier.');
+    return;
+  }
+
+  console.log('OAuth Verifier:', oauthVerifier);
+  console.log('OAuth Token:', oauthToken);
+  console.log('OAuth Token Secret:', oauthTokenSecret);
+
   oa.getOAuthAccessToken(oauthToken, oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret) => {
     if (error) {
+      console.error('Error getting OAuth access token:', error);
       res.send('Error getting OAuth access token: ' + JSON.stringify(error));
     } else {
+      console.log('OAuth Access Token:', oauthAccessToken);
+      console.log('OAuth Access Token Secret:', oauthAccessTokenSecret);
       req.session.oauthAccessToken = oauthAccessToken;
       req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
       res.redirect('/posts');
@@ -62,9 +77,17 @@ app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
 
+  if (!oauthAccessToken || !oauthAccessTokenSecret) {
+    res.send('Error: Missing OAuth access token or secret.');
+    return;
+  }
+
   const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
-  oa.get(`https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=` + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+  const url = `https://api.tumblr.com/v2/blog/saltivkatype/posts?api_key=${tumblrConsumerKey}`;
+
+  oa.get(url, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
+      console.error('Error getting Tumblr posts:', error);
       res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
     } else {
       const posts = JSON.parse(data).response.posts;
