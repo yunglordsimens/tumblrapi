@@ -92,7 +92,7 @@ app.get('/posts', (req, res) => {
   }
 
   const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
-  const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${tumblrConsumerKey}`;
+  const url = `https://api.tumblr.com/v2/blog/saltivkatype/posts?api_key=${tumblrConsumerKey}`;
 
   oa.get(url, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
