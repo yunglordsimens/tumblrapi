@@ -26,6 +26,9 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Tumblr OAuth App!');
 });
 
+// Фиктивный маршрут для favicon.ico
+app.get('/favicon.ico', (req, res) => res.status(204));
+
 // Маршрут для инициализации OAuth авторизации
 app.get('/auth', (req, res) => {
   oa.getOAuthRequestToken((error, oauthToken, oauthTokenSecret) => {
@@ -92,7 +95,7 @@ app.get('/posts', (req, res) => {
   }
 
   const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
-  const url = `https://api.tumblr.com/v2/blog/saltivkatype/posts?api_key=${tumblrConsumerKey}`;
+  const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${tumblrConsumerKey}`;
 
   oa.get(url, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
