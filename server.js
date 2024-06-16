@@ -21,11 +21,6 @@ const oa = new OAuth(
   'HMAC-SHA1'
 );
 
-app.get('/time', (req, res) => {
-  const now = new Date();
-  res.send(`Current server time: ${now.toISOString()}`);
-});
-
 // Обработчик для корневого URL
 app.get('/', (req, res) => {
   res.send('Welcome to the Tumblr OAuth App!');
