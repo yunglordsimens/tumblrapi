@@ -1,6 +1,8 @@
 const express = require('express');
 const OAuth = require('oauth').OAuth;
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -9,7 +11,14 @@ const tumblrConsumerKey = process.env.TUMBLR_CONSUMER_KEY;
 const tumblrConsumerSecret = process.env.TUMBLR_CONSUMER_SECRET;
 const callbackUrl = 'https://saltivkatype-f4fdffdf2e85.herokuapp.com/callback';
 
+const redisClient = redis.createClient({ url: process.env.REDIS_URL });
+
+redisClient.on('error', (err) => console.error('Redis client error', err));
+
+redisClient.connect().then(() => console.log('Connected to Redis'));
+
 app.use(session({
+  store: new RedisStore({ client: redisClient }),
   secret: 'secret',
   resave: false,
   saveUninitialized: true,
@@ -97,6 +106,7 @@ app.get('/posts', (req, res) => {
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
 
   if (!oauthAccessToken || !oauthAccessTokenSecret) {
+    console.error('Missing OAuth access token or secret.');
     res.send('Error: Missing OAuth access token or secret.');
     return;
   }
