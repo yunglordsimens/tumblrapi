@@ -3,6 +3,7 @@ const OAuth = require('oauth').OAuth;
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const redis = require('redis');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -11,20 +12,20 @@ const tumblrConsumerKey = process.env.TUMBLR_CONSUMER_KEY;
 const tumblrConsumerSecret = process.env.TUMBLR_CONSUMER_SECRET;
 const callbackUrl = 'https://saltivkatype-f4fdffdf2e85.herokuapp.com/callback';
 
-const redisClient = redis.createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
-});
-redisClient.on('error', (err) => console.log('Redis Client Error', err));
-redisClient.on('connect', () => console.log('Connected to Redis'));
+// Создание клиента Redis
+const redisClient = redis.createClient(process.env.REDIS_URL);
 
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+redisClient.on('error', (err) => {
+  console.log('Redis Client Error', err);
+});
+
+// Настройка хранилища сессий с использованием Redis
+app.use(session({
+  store: new RedisStore({ client: redisClient }),
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true
+}));
 
 const oa = new OAuth(
   'https://www.tumblr.com/oauth/request_token',
@@ -62,8 +63,7 @@ app.get('/callback', (req, res) => {
   const oauthVerifier = req.query.oauth_verifier;
 
   if (!oauthToken || !oauthTokenSecret || !oauthVerifier) {
-    res.send('Missing OAuth token, secret, or verifier.');
-    return;
+    return res.send('Missing OAuth token, secret, or verifier.');
   }
 
   oa.getOAuthAccessToken(oauthToken, oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret) => {
@@ -82,12 +82,7 @@ app.get('/posts', (req, res) => {
   const oauthAccessToken = req.session.oauthAccessToken;
   const oauthAccessTokenSecret = req.session.oauthAccessTokenSecret;
 
-  if (!oauthAccessToken || !oauthAccessTokenSecret) {
-    res.send('Error: Missing OAuth access token or secret.');
-    return;
-  }
-
-  const blogName = 'saltivkatype.tumblr.com'; // Замените на ваш блог
+  const blogName = 'saltivkatype.tumblr.com';  // Замените на ваш блог
   oa.get(`https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=` + tumblrConsumerKey, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
     if (error) {
       res.send('Error getting Tumblr posts: ' + JSON.stringify(error));
