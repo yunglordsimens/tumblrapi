@@ -7,6 +7,9 @@ const redis = require('redis');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Добавьте эту строку для включения CORS
+app.use(cors());
+
 // Использование переменных окружения для ключей и секрета Tumblr
 const tumblrConsumerKey = process.env.TUMBLR_CONSUMER_KEY;
 const tumblrConsumerSecret = process.env.TUMBLR_CONSUMER_SECRET;
