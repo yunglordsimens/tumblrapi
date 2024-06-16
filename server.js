@@ -73,6 +73,12 @@ app.get('/posts', (req, res) => {
   });
 });
 
+// Маршрут для проверки времени на сервере
+app.get('/time', (req, res) => {
+  const now = new Date();
+  res.send(`Current server time: ${now.toISOString()}`);
+});
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
